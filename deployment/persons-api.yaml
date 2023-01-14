@@ -26,7 +26,7 @@ spec:
     matchLabels:
       service: udaconnect-perrson-api
   template:
-    metadata:
+    metadata: 
       labels:
         service: udaconnect-perrson-api
     spec:
