@@ -33,6 +33,7 @@ def create_app(env=None):
 
     register_routes(api, app)
     db.init_app(app)
+    gRPCserver()
 
     @app.route("/health")
     def health():
