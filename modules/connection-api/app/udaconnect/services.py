@@ -37,6 +37,7 @@ class ConnectionService:
         ).all()
 
         Persons = PersonClient.get_persons()
+        print(Persons)
 
         # Cache all users in memory for quick lookup
         person_map: Dict[str, Person] = {person.id: person for person in Persons}
