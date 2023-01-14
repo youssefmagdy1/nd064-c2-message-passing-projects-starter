@@ -28,6 +28,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: /modules/persons-api
+          context: modules/persons-api
           push: true
           tags: yusufmagdy/nd064-udaconnect-person-api:latest
