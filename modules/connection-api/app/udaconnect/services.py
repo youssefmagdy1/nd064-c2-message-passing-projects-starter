@@ -32,6 +32,7 @@ class ConnectionService:
         ).all()
 
         Persons = requests.get('http://localhost:30002/api/persons')
+        print(Persons)
         Persons = Persons.json() 
 
         # Cache all users in memory for quick lookup
