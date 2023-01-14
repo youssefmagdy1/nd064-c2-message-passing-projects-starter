@@ -10,6 +10,11 @@ from app.udaconnect.schemas import ConnectionSchema, LocationSchema, PersonSchem
 from geoalchemy2.functions import ST_AsText, ST_Point
 from sqlalchemy.sql import text
 
+import grpc
+import app.udaconnect.person_pb2 as pb2 
+import app.udaconnect.person_pb2_grpc as pb2_grpc 
+
+
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger("udaconnect-api")
 
@@ -31,9 +36,7 @@ class ConnectionService:
             Location.creation_time >= start_date
         ).all()
 
-        Persons = requests.get('http://localhost:30002/api/persons')
-        print(Persons)
-        Persons = Persons.json() 
+        Persons = PersonClient.get_persons()
 
         # Cache all users in memory for quick lookup
         person_map: Dict[str, Person] = {person.id: person for person in Persons}
@@ -86,3 +89,24 @@ class ConnectionService:
 
         return result
 
+
+class PersonClient(object):
+
+    def __init__(self):
+        self.host = 'localhost'
+        self.server_port = 30004
+
+        # instantiate a channel
+        self.channel = grpc.insecure_channel(
+            '{}:{}'.format(self.host, self.server_port))
+
+        # bind the client and the server
+        self.stub = pb2_grpc.PersonServiceStub(self.channel)
+
+    def get_persons(self, message):
+        """
+        Client function to call the rpc for GetServerResponse
+        """
+        message = pb2.Message(message=message)
+        # print(f'{message}')
+        return self.stub.GetServerResponse(message)
